@@ -14,7 +14,6 @@ public class Board {
     private final int boardSize;
     private List<Part> parts;
     private Part blankPart;
-    private int indexOfBlankPart;
 
     public Board(int size) {
         this.boardSize = size;
@@ -28,7 +27,6 @@ public class Board {
         this.parts.add(blankPart);
 
         this.blankPart = blankPart;
-        this.indexOfBlankPart = this.parts.size() - 1;
 
         this.updateNeighbors();
         this.shuffle();
@@ -53,10 +51,6 @@ public class Board {
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
             part.setNeighbors(neighbors);
-
-            if (part.isBlank()) {
-                this.indexOfBlankPart = partIndex;
-            }
         });
     }
 
@@ -86,7 +80,7 @@ public class Board {
                 .findFirst()
                 .map(partToMove -> {
                     int indexOfPartToMove = this.parts.indexOf(partToMove);
-                    Collections.swap(this.parts, indexOfPartToMove, indexOfBlankPart);
+                    Collections.swap(this.parts, indexOfPartToMove, this.blankPart.getIndex());
                     this.updateNeighbors();
                     return true;
                 }).orElse(false);
